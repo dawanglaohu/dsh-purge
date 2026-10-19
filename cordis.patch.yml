@@ -28,7 +28,10 @@
   config:
     includeHarnessIdentity: false
     personaPrefix: ""
-    personaSuffix: Your working directory is {{cwd}}.
+    # dsh 0.2.1 no longer registers a `cwd` prompt variable: the workspace
+    # reaches the model through the working-directory runtime context, and a
+    # section that still mentions {{cwd}} fails to assemble.
+    personaSuffix: ""
 
 - id: dsh-purge
   inject: [systemPrompt, tools]
