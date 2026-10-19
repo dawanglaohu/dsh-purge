@@ -1,3 +1,27 @@
+# 1.1.73
+
+## 中文
+
+- 版本 **1.1.73**，适配 DeepSeek Harness **0.2.1-rc.2**。
+- 0.2.1 移除了 `cwd` 提示词变量（工作目录改由 working-directory 运行时上下文提供）。插件不再往 persona 里写 `{{cwd}}`：`CWD_ONLY_SUFFIX` 置空、`cordis.patch.yml` 的 `personaSuffix` 置空、`stripHarnessPersona` 的两条官方身份正则改成整段删除。升级后不再报 `unknown prompt variable "{{cwd}}"`。旧版残留的那几句仍被识别，升级时会清掉而不是当作用户身份保留。
+- 0.2.1 移除了 `toolFilter` 配置项，`dsh-tool-subagent` 见到该键直接抛错、整行挂载失败、整个预设变 broken。红队预设删掉该键，叶子约束改由 `maxDepth: 1` 的 depthLimit 强制；`lib/redteam/index.js` 增加自愈，老用户预设里的 `persona` / `toolFilter` 会在安装预设时被就地剥掉。
+- Web 面身份句从 `dsh-web-app/lib/index.js` 搬到了 `dsh-harness-dev-context/lib/index.js`。`targetFiles()` 增加 `harness-dev-context`，#32 / #53 同时覆盖两处；`LEGACY_WEB_SURFACE` 是冻结的历史段落，故意不动。
+- #40 适配 0.2.1 的 assemble 尾段：新增 `requiredContexts` 过滤，complete 段仍插在 inject 段之后。
+- #77 适配 `if (this.revised.size > 0) this.revised.clear();`；#88 改 `softSettle` 并补 `renderedPrompt` 锚点；#80 在 0.2.0+ 本就没有 fs/web 残留，改 `softSettle` 结算；#71 加 `optional`，未装梁神时归入不适用而不是跳过。
+- 红队工具链在 0.2.1 桌面版下从 `process.resourcesPath` 的 `app.asar` / `app` 解析宿主自己的 `@deepseek-ai/dsh`，不再需要 profile 软链（软链会引入第二份 cordis）。
+- 预设里 `\`` 的错误转义改回正常反引号，提示词不再带多余反斜杠。
+
+## English
+
+- **1.1.73**, adapted to DeepSeek Harness **0.2.1-rc.2**.
+- dsh 0.2.1 dropped the `cwd` prompt variable (the workspace now arrives through the working-directory runtime context). The plugin no longer writes `{{cwd}}` into the persona: `CWD_ONLY_SUFFIX` is empty, `personaSuffix` in `cordis.patch.yml` is empty, and the two official-identity regexes in `stripHarnessPersona` now delete the whole match. The `unknown prompt variable "{{cwd}}"` failure is gone, and leftovers from older versions are still recognised and cleaned instead of being kept as user identity text.
+- dsh 0.2.1 removed the `toolFilter` option; `dsh-tool-subagent` throws on that key, the row fails to mount and the whole preset goes broken. The redteam preset drops it and leaf enforcement falls back to the `maxDepth: 1` depthLimit; `lib/redteam/index.js` also strips `persona` / `toolFilter` from an older user preset while installing it.
+- The Web-surface identity sentence moved from `dsh-web-app/lib/index.js` to `dsh-harness-dev-context/lib/index.js`. `targetFiles()` gains a `harness-dev-context` entry and #32 / #53 cover both files; `LEGACY_WEB_SURFACE` is a frozen historical paragraph and is deliberately left alone.
+- #40 matches the 0.2.1 assemble tail, including the new `requiredContexts` filter, and still inserts the complete section after the inject section.
+- #77 matches `if (this.revised.size > 0) this.revised.clear();`; #88 uses `softSettle` plus the `renderedPrompt` anchor; #80 settles through `softSettle` because 0.2.0+ never had fs/web residue to undo; #71 is `optional` so a missing LiangShen preset reads as not-applicable rather than skipped.
+- Under the 0.2.1 desktop build the redteam toolchain resolves the host's own `@deepseek-ai/dsh` through `process.resourcesPath` (`app.asar` / `app`) instead of a profile symlink, which would load a second cordis copy.
+- The stray `\`` escaping in the preset is back to plain backticks, so the prompt no longer carries extra backslashes.
+
 # 1.1.71
 
 ## 中文
