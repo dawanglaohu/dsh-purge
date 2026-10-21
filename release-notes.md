@@ -1,3 +1,30 @@
+# 1.1.74
+
+## 中文
+
+- 版本 **1.1.74**。修 Windows 上点「应用」必弹「应用无法启动或已意外停止」、`app.asar` 却始终没被换掉的问题。
+- 根因一：`spawn("powershell.exe", …, { detached: true })` 在本机（Windows 11 + 火绒）静默失败——子进程立刻以 code 0 退出、脚本一行都不执行，与 `stdio` / `windowsHide` 无关。换包脚本根本没跑，没人杀 Electron main、没人挪 asar；host 到点自己 `process.exit(0)`，`resources/app/lib/main.js` 的 ChildProcess 监听器把 host 退出当致命错误抛出，就是那个崩溃对话框。
+- 根因二：即使换用 `cmd /c start` 让脚本活下来，新进程仍是本进程 Job Object 的成员（实测 `IsProcessInJob` 对 Electron main 与 host 都返回 `IN_JOB`），Electron 主进程一退出 Windows 就连带杀掉整个 job，脚本刚起来就被带走。
+- 修法：新增 `spawnDetached()`。`powershell.exe` 改由 `Invoke-CimMethod Win32_Process.Create` 创建——由 `WmiPrvSE.exe` 发起 `CreateProcess`，新进程不属于调用者的 job（实测 `NO_JOB`），同一用户、同一 session、环境变量完整。`cmd /c start "" /b` 保留给 node helper，因为它依赖 `ELECTRON_RUN_AS_NODE` 等自定义环境，而 CIM 只给系统环境。四处 `detached: true` 的 spawn 全部改走它。
+- `spawnSync` 必须 `stdio: "ignore"`：默认 `pipe` 时被脱离出去的 powershell 会继承管道句柄、管道永不关闭，`spawnSync` 干等到 15 秒超时（日志里是 `asar swap PowerShell spawn failed: spawnSync cmd.exe ETIMEDOUT`），那 15 秒是同步阻塞，会把宿主主线程整个卡住。
+- `Stop-HarnessInstall` 改为按进程树先杀根（Electron main）再杀子进程，且等 main 真的消失才继续。原先按枚举顺序随机杀，host 先死就会让 main 的 ChildProcess 监听器先弹框。不能用 `--type=` 区分——host、MCP server、subprocess runner 都没有该参数。
+- 挪 asar 前增加 mmap 锁等待（40 × 300ms 独占打开探针）：Electron 退出后句柄释放有延迟，直接 `Move-Item` 会 `EACCES`。
+- 换包成功后加 60 秒启动自检：新实例没起来就把 `app.asar.bak` 挪回去再启动，不把用户留在「DSH 打不开」。
+- `gracefulExit()` 的兜底超时 1500ms → 20000ms。实测 `powershell.exe` 冷启动加 `Get-CimInstance Win32_Process` 枚举要 1–3 秒，1500ms 时 PowerShell 还没动手 main 就收到了 host 退出事件。
+- 顺带修 `cimSpawnPowershell` 的 `opts` 形参遗漏（会导致 `ReferenceError: opts is not defined`）。
+
+## English
+
+- **1.1.74**. Fixes Windows: clicking Apply always raised "the app could not start or stopped unexpectedly" while `app.asar` was never actually swapped.
+- Root cause one: `spawn("powershell.exe", …, { detached: true })` fails silently on this machine (Windows 11 + Huorong) — the child exits immediately with code 0 and not one line of the script runs, regardless of `stdio` / `windowsHide`. The swap script never ran, so nothing killed Electron main and nothing moved the asar; the host then called `process.exit(0)` on its own, and the ChildProcess listener in `resources/app/lib/main.js` turned that into the fatal dialog.
+- Root cause two: even when `cmd /c start` keeps the script alive, the new process is still a member of this process's Job Object (`IsProcessInJob` returns `IN_JOB` for both Electron main and host). When Electron main exits, Windows kills the whole job and the script dies right after starting.
+- Fix: a new `spawnDetached()`. `powershell.exe` is now created through `Invoke-CimMethod Win32_Process.Create`, so `WmiPrvSE.exe` issues the `CreateProcess` and the child is outside the caller's job (`NO_JOB`), in the same user, same session, with the full environment. `cmd /c start "" /b` stays for the node helper, which needs `ELECTRON_RUN_AS_NODE` and other custom variables that CIM would not carry. All four `detached: true` spawns go through it.
+- `spawnSync` must use `stdio: "ignore"`: with the default `pipe`, the detached powershell inherits the pipe handles, they never close, and `spawnSync` waits out its 15-second timeout (logged as `asar swap PowerShell spawn failed: spawnSync cmd.exe ETIMEDOUT`) — 15 seconds of synchronous blocking that freezes the host's main thread.
+- `Stop-HarnessInstall` now kills the process-tree roots (Electron main) first, waits for main to actually disappear, and only then kills the children. The old enumeration order was random, so host often died first and made main's ChildProcess listener raise the dialog. `--type=` cannot be used to tell them apart: host, the MCP server and the subprocess runner all lack it.
+- Before moving the asar, wait for the mmap lock to be released (40 × 300 ms exclusive-open probe): Windows releases the handle slightly after Electron exits, and a direct `Move-Item` fails with `EACCES`.
+- After a successful swap, a 60-second startup check moves `app.asar.bak` back and restarts if the new instance never comes up, instead of leaving the user with a DSH that will not open.
+- `gracefulExit()`'s fallback timeout goes from 1500 ms to 20000 ms. A cold `powershell.exe` plus a `Get-CimInstance Win32_Process` enumeration takes 1–3 seconds here, so at 1500 ms main received the host-exit event before PowerShell had done anything.
+- Also fixes the missing `opts` parameter in `cimSpawnPowershell`, which raised `ReferenceError: opts is not defined`.
 # 1.1.73
 
 ## 中文
