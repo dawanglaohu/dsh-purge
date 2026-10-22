@@ -4,7 +4,7 @@
 
 <h1 align="center">⚔️ DeepSeek Harness cybersecurity red-team tool (dsh-purge)</h1>
 
-<p align="center"><strong>Version 1.1.74</strong></p>
+<p align="center"><strong>Version 1.2.0</strong></p>
 
 <p align="center">
   <em>DeepSeek Harness jailbreak: every model, swap prompts per model. Default prompt for 小码酱. Please star ⭐ If you build on this, see Attribution required.</em>
@@ -185,9 +185,9 @@ WeChat name **「老张的ai科技」**, same handle as the live-room viewer boa
 
 ## Supported hosts
 
-The latest plugin supports **dsh 0.2** only — do not apply it to 0.1.x. dsh 0.2.1 dropped the `{{cwd}}` prompt variable and the `toolFilter` option; 1.1.73 adapts to that, and 1.1.74 fixes the Windows Apply path that always raised the crash dialog while never swapping `app.asar`. dsh 0.2.0 and older can stay on 1.1.72.
+The latest plugin supports **dsh 0.2** only — do not apply it to 0.1.x. dsh 0.2.1 dropped the `{{cwd}}` prompt variable and the `toolFilter` option; 1.1.73 adapts to that, and 1.1.74 fixes the Windows Apply path that always raised the crash dialog while never swapping `app.asar`. 1.2.0 merges the community branch: a host Settings page, approval and audit, a proxied update channel, an inject-position switch, and patch #93. dsh 0.2.0 and older can stay on 1.1.72.
 
-- **dsh 0.2** (official desktop **0.2.1-rc.2** / official `dsh web`): use **1.1.74** or newer. This page installs that line.
+- **dsh 0.2** (official desktop **0.2.1-rc.2** / official `dsh web`): use **1.2.0** or newer. This page installs that line.
 - **dsh 0.1.7** (incl. rc.1 / rc.2): use **1.1.39** or older — pick the tag on [Releases](https://github.com/YuJunZhiXue/dsh-purge/releases).
 
 Unmatched patches stay pending or skipped; nothing is rewritten blindly.
@@ -217,7 +217,7 @@ Hub one-click on [dsh-plugin.org](https://dsh-plugin.org/plugins/yujunzhixue/dsh
 For the desktop client you can also click the button (`dsh://` deep link):
 
 <p align="center">
-  <a href="dsh://plugin/install?id=dsh-purge&name=dsh-purge&version=1.1.74&repo=dawanglaohu%2Fdsh-purge&permissions=%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%2C%E6%9C%AC%E6%9C%BA%E8%A1%A5%E4%B8%81%2C%E8%AE%BE%E7%BD%AE%E9%A1%B5&downloadUrl=https%3A%2F%2Fgithub.com%2Fdawanglaohu%2Fdsh-purge%2Farchive%2Frefs%2Fheads%2Fmaster.tar.gz"><strong>Install in desktop client</strong></a>
+  <a href="dsh://plugin/install?id=dsh-purge&name=dsh-purge&version=1.2.0&repo=dawanglaohu%2Fdsh-purge&permissions=%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%2C%E6%9C%AC%E6%9C%BA%E8%A1%A5%E4%B8%81%2C%E8%AE%BE%E7%BD%AE%E9%A1%B5&downloadUrl=https%3A%2F%2Fgithub.com%2Fdawanglaohu%2Fdsh-purge%2Farchive%2Frefs%2Fheads%2Fmaster.tar.gz"><strong>Install in desktop client</strong></a>
 </p>
 
 ### After the command: three steps
@@ -225,7 +225,7 @@ For the desktop client you can also click the button (`dsh://` deep link):
 Adding the plugin to a profile does **not** patch `@deepseek-ai` by itself.
 
 1. **Quit and reopen** the host you installed into — stop and restart `dsh web`, or quit the desktop tray and reopen that app.
-2. On **that host**, click **dsh-purge** beside the session title, then **Apply** on the **Clean** page. It is not on the host Settings page.
+2. Click **dsh-purge** beside the session title to open the floating dock, or open the host **Settings** page — 1.2.0 adds a **Purge** entry there. Press **Apply** on the **Armor** page.
 3. A successful **Apply** restarts once so patches load. It does not restart if it did not finish.
 
 Web controls affect Web only; desktop controls affect the desktop app only. Do not Apply one host from the other.

@@ -4,7 +4,7 @@
 
 <h1 align="center">⚔️ DeepSeek Harness 网络安全红队工具（dsh-purge）</h1>
 
-<p align="center"><strong>Version 1.1.74</strong></p>
+<p align="center"><strong>Version 1.2.0</strong></p>
 
 <p align="center">
   <em>DeepSeek Harness 破甲：让所有模型都能破甲，不同模型可换不同提示词；默认提示词面向国模「小码酱」。Jailbreak for every model — swap prompts per model. 求 Star 收藏 ⭐ 如要二开，请查看署名要求部分</em>
@@ -184,9 +184,9 @@ Harness 不只是把问题交给模型。它还会在运行时改提示词、审
 
 ## 适配范围
 
-最新版只支持 **dsh 0.2**，不要拿它去打 0.1.x。0.2.1 移除了 `{{cwd}}` 提示词变量与 `toolFilter` 配置项，1.1.73 起已适配；1.1.74 修掉 Windows 上点「应用」必弹崩溃框、`app.asar` 却换不掉的问题。0.2.0 及更早仍可用 1.1.72。
+最新版只支持 **dsh 0.2**，不要拿它去打 0.1.x。0.2.1 移除了 `{{cwd}}` 提示词变量与 `toolFilter` 配置项，1.1.73 起已适配；1.1.74 修掉 Windows 上点「应用」必弹崩溃框、`app.asar` 却换不掉的问题；1.2.0 把社区分支的更新合并进来（设置页、审批与审计、更新通道代理、注入位置、补丁 #93）。0.2.0 及更早仍可用 1.1.72。
 
-- **dsh 0.2**（官方桌面 **0.2.1-rc.2** / 官方 `dsh web`）：用 **1.1.74** 及以上。本页命令装的就是这一档。
+- **dsh 0.2**（官方桌面 **0.2.1-rc.2** / 官方 `dsh web`）：用 **1.2.0** 及以上。本页命令装的就是这一档。
 - **dsh 0.1.7**（含 rc.1 / rc.2）：用 **1.1.39** 及更早 —— 在 [Releases](https://github.com/YuJunZhiXue/dsh-purge/releases) 里选对应标签。
 
 对不上的补丁会显示待应用或跳过，不会乱改文件。
@@ -216,7 +216,7 @@ dsh plugin --profile desktop add dsh-purge
 桌面客户端也可以点按钮（`dsh://` 唤起）：
 
 <p align="center">
-  <a href="dsh://plugin/install?id=dsh-purge&name=dsh-purge&version=1.1.74&repo=dawanglaohu%2Fdsh-purge&permissions=%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%2C%E6%9C%AC%E6%9C%BA%E8%A1%A5%E4%B8%81%2C%E8%AE%BE%E7%BD%AE%E9%A1%B5&downloadUrl=https%3A%2F%2Fgithub.com%2Fdawanglaohu%2Fdsh-purge%2Farchive%2Frefs%2Fheads%2Fmaster.tar.gz"><strong>唤起客户端一键安装</strong></a>
+  <a href="dsh://plugin/install?id=dsh-purge&name=dsh-purge&version=1.2.0&repo=dawanglaohu%2Fdsh-purge&permissions=%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%2C%E6%9C%AC%E6%9C%BA%E8%A1%A5%E4%B8%81%2C%E8%AE%BE%E7%BD%AE%E9%A1%B5&downloadUrl=https%3A%2F%2Fgithub.com%2Fdawanglaohu%2Fdsh-purge%2Farchive%2Frefs%2Fheads%2Fmaster.tar.gz"><strong>唤起客户端一键安装</strong></a>
 </p>
 
 ### 装完都要做这三步
@@ -224,7 +224,7 @@ dsh plugin --profile desktop add dsh-purge
 只把插件写进 profile **还不会**改 `@deepseek-ai`。
 
 1. **退出并重新打开**刚装的那个宿主：Web 关掉 `dsh web` 再开；桌面端退出托盘再打开对应 exe。
-2. 在**这个宿主**点会话标题旁的 **dsh-purge**，在 **清洗** 页点 **「应用」**。宿主的设置页里没有这个条目。
+2. 点会话标题旁的 **dsh-purge** 打开浮窗，或者进宿主的**设置页**（1.2.0 起这里也有一个 **Purge** 条目），在 **破甲 / 清洗** 页点 **「应用」**。
 3. 「应用」成功后会自动重启一次，让补丁进入当前进程。没做完不会重启。
 
 Web 的控件只动 Web，桌面端的只动桌面应用。不要在一个宿主里点另一个宿主的应用。

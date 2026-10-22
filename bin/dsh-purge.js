@@ -2,6 +2,7 @@
 
 import * as core from "../lib/core.js";
 import * as rules from "../lib/rules.js";
+import { readTuning, writeTuning } from "../lib/tuning.js";
 
 const args = process.argv.slice(2);
 
@@ -23,6 +24,11 @@ function printStatus(state) {
   out.push(`  备份 / backup  ${state.has_backup ? "有 / yes" : "无 / no"}`);
   out.push(`  注入文件       ${state.override_path}`);
   out.push(`  注入状态       ${state.override_status}`);
+  try {
+    const tuning = readTuning(state.dsh_home);
+    out.push(`  注入位置       ${tuning.injectPosition}（head | tail | both）`);
+    out.push(`  强化段         ${tuning.boost ? "开 / on" : "关 / off"}`);
+  } catch { /* tuning 读不到不影响状态输出 */ }
   out.push("");
   out.push(`  补丁 ${state.patches_applied}/${core.ALL_PATCHES.length} 已清洗, ${state.patches_pending} 待清洗`);
   for (const p of core.ALL_PATCHES) {
@@ -36,7 +42,7 @@ function printStatus(state) {
 }
 
 async function main() {
-  const mode = args.find((a) => ["--apply", "--revert", "--uninstall", "--status", "--edit", "--help"].includes(a));
+  const mode = args.find((a) => ["--apply", "--revert", "--uninstall", "--status", "--edit", "--help", "--inject", "--boost"].includes(a));
 
   if (mode === "--help" || args.includes("-h")) {
     console.log(`dsh-purge 用法:
@@ -45,7 +51,29 @@ async function main() {
   dsh-purge --revert     回滚还原
   dsh-purge --uninstall  卸载插件（已应用则先还原）
   dsh-purge --edit       编辑注入文件 prompt-inject.md
+  dsh-purge --inject head|tail|both   注入在系统提示词里的位置（重启生效）
+  dsh-purge --boost on|off            尾部强化段开关（重启生效）
   dsh-purge --help       帮助`);
+    return;
+  }
+
+  if (mode === "--inject" || mode === "--boost") {
+    const value = String(args[args.indexOf(mode) + 1] || "").toLowerCase();
+    if (mode === "--inject") {
+      if (!["head", "tail", "both"].includes(value)) {
+        console.log("用法: dsh-purge --inject head|tail|both");
+        process.exit(1);
+      }
+      const next = writeTuning({ injectPosition: value });
+      console.log(`  注入位置 → ${next.injectPosition}（重启 dsh 生效）`);
+    } else {
+      if (!["on", "off", "true", "false", "1", "0"].includes(value)) {
+        console.log("用法: dsh-purge --boost on|off");
+        process.exit(1);
+      }
+      const next = writeTuning({ boost: value === "on" || value === "true" || value === "1" });
+      console.log(`  强化段 → ${next.boost ? "开" : "关"}（重启 dsh 生效）`);
+    }
     return;
   }
 

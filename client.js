@@ -250,6 +250,7 @@ window.__ModuleLoader__.load({ id: "dsh-purge", factory: (require) => {
 			"update.fail": "更新失败: {error}",
 			"update.timeout": "检测超时，请再点一次检测更新",
 			"update.needRestart": "检测接口未加载，请先重启 dsh 再点检测更新",
+			"update.pendingRestart": "已装好 {installed}，当前运行的还是 {loaded}。重启 dsh 后生效。",
 			"update.noBeta": "还没有测试版",
 			"update.switch": "切换到此版本",
 			"update.pick": "选择版本",
@@ -433,6 +434,7 @@ window.__ModuleLoader__.load({ id: "dsh-purge", factory: (require) => {
 			"patch.86": "队列插话走 steer；公共 steer() 保持下一步",
 			"patch.87": "首次 assemble 用 prepare 返回的当前模式 systemPrompt",
 			"patch.88": "去掉 renderPrompt 后的挂针，注入只走 assemble",
+			"patch.93": "ask_user 尊重模型给的等待时间，只把无限等待收成 5 分钟",
 			"status.unlocated": "未定位",
 			"status.na": "本端不需要",
 			"metric.unlocated": "还没定位到本机 Harness",
@@ -467,6 +469,32 @@ window.__ModuleLoader__.load({ id: "dsh-purge", factory: (require) => {
 			"continue.ready": "继续（还可 {left} 次）",
 			"continue.limit": "已达继续上限",
 			"continue.fail": "继续失败: {error}",
+			"page.title": "DeepSeek Harness Purge",
+			"page.nav": "Purge",
+			"page.lead": "本机提示词与引擎层清洗。改完点「应用」，重启宿主后生效。",
+			"page.seg.armor": "破甲",
+			"page.seg.rules": "规则",
+			"page.seg.skills": "技能",
+			"page.seg.drill": "演练台",
+			"drill.title": "演练台",
+			"drill.lead": "资产、技能与本机环境。首次进入需要读完声明、等完倒计时并勾选三项。",
+			"drill.authorize": "开始授权",
+			"drill.unavailable": "演练台资源未随插件加载，重装或重启后可恢复。",
+			"dock.openSettings": "设置页",
+			"purge.lead": "本机 0.2.1 的锚点：已应用 / 总数、命令 shim、备份状态。检测到待处理项时点应用。",
+			"override.lead": "注入到 system 段的操作员指令。改成自己的稿子会按原样落盘，不再随插件刷新。",
+			"err.stale": "另一个窗口刚改过状态（现在是 rev {rev}，最后一次动作 {last}）。已重新读取，请确认后再点。",
+			"gate.title": "审批与审计",
+			"gate.hint": "审计永远记流水。审批档位只影响模型发起的 purge_apply / purge_revert / purge_uninstall；你自己点按钮不受影响。",
+			"gate.mode.audit": "只记流水（默认，行为同旧版）",
+			"gate.mode.enforce": "要求一次批准（allowed-once）",
+			"gate.gated": "受管工具：{list}",
+			"gate.saved": "已保存，重启 dsh 后对工具调用生效。",
+			"gate.audit.show": "查看审计流水",
+			"gate.audit.hide": "收起审计流水",
+			"gate.audit.refresh": "刷新",
+			"gate.audit.busy": "读取中…",
+			"gate.audit.empty": "还没有记录。",
 		};
 
 		const en = {
@@ -594,6 +622,7 @@ window.__ModuleLoader__.load({ id: "dsh-purge", factory: (require) => {
 			"update.fail": "Update failed: {error}",
 			"update.timeout": "Check timed out. Click Check update again.",
 			"update.needRestart": "Update API is not loaded. Restart dsh, then check again.",
+			"update.pendingRestart": "Installed {installed}; still running {loaded}. Restart dsh to load it.",
 			"update.noBeta": "No beta build yet",
 			"update.switch": "Switch to this version",
 			"update.pick": "Select version",
@@ -777,6 +806,7 @@ window.__ModuleLoader__.load({ id: "dsh-purge", factory: (require) => {
 			"patch.86": "Queue steer stays steer; public steer() stays next-step",
 			"patch.87": "First assemble uses the systemPrompt prepare returned",
 			"patch.88": "Drop the hang after renderPrompt; inject is assemble only",
+			"patch.93": "ask_user honors the requested wait; only -1 is capped at 5 minutes",
 			"status.na": "Not for this host",
 			"metric.sealed": "Official client found. Apply to unpack",
 			"metric.sealed.count": "Sealed",
@@ -811,6 +841,32 @@ window.__ModuleLoader__.load({ id: "dsh-purge", factory: (require) => {
 			"continue.ready": "Continue ({left} left)",
 			"continue.limit": "Continue limit reached",
 			"continue.fail": "Continue failed: {error}",
+			"page.title": "DeepSeek Harness Purge",
+			"page.nav": "Purge",
+			"page.lead": "Prompt and engine-level cleaning for this install. Press Apply, then restart the host.",
+			"page.seg.armor": "Armor",
+			"page.seg.rules": "Rules",
+			"page.seg.skills": "Skills",
+			"page.seg.drill": "Drill",
+			"drill.title": "Drill",
+			"drill.lead": "Assets, skills, and the local environment. The first visit needs the notice, the countdown, and three boxes.",
+			"drill.authorize": "Start authorization",
+			"drill.unavailable": "Drill resources are not loaded; reinstall or restart to restore them.",
+			"dock.openSettings": "Settings page",
+			"purge.lead": "Anchors on this 0.2.1 install: applied / total, command shims, backup state. Press Apply when anything is pending.",
+			"override.lead": "Operator instructions injected into the system section. Your own text is written verbatim and stops following plugin updates.",
+			"err.stale": "Another window changed the state (now rev {rev}, last action {last}). Re-read; check before clicking again.",
+			"gate.title": "Approval and audit",
+			"gate.hint": "Audit always records. The approval tier only affects model-issued purge_apply / purge_revert / purge_uninstall; your own clicks are unaffected.",
+			"gate.mode.audit": "Record only (default, same as before)",
+			"gate.mode.enforce": "Require one-time approval (allowed-once)",
+			"gate.gated": "Gated tools: {list}",
+			"gate.saved": "Saved; applies to tool calls after dsh restarts.",
+			"gate.audit.show": "Show audit trail",
+			"gate.audit.hide": "Hide audit trail",
+			"gate.audit.refresh": "Refresh",
+			"gate.audit.busy": "Reading…",
+			"gate.audit.empty": "No records yet.",
 		};
 
 		const PURGE_CSS = `
@@ -1050,6 +1106,33 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 .dshp-dock[data-theme="white"] .dshp-dock-body .rt-err{color:#9a3434!important}
 .dshp-dock[data-theme="dusk"] .dshp-dock-body .rt-err{color:#f0b4b4!important}
 .dshp-dock-body .rt-rep-http,.dshp-dock-body pre{background:color-mix(in srgb,var(--dsw-alias-bg-layer-1,#fff) 84%,transparent)!important;color:var(--dshp-ink)!important;border:1px solid color-mix(in srgb,var(--dsw-alias-border-l1,#888) 60%,transparent)!important}
+/* ── 设置页外壳（1.2.0 新增，来自 JeffKeeping/dsh-purge-plus）─────────────────
+   这里只追加设置页与审批段用到的新类；.dshp-root 的字体、.dshp-panel、.dshp-btn
+   等既有观感保持本地版本不变，浮窗里的三个段和设置页共用同一套变量。 */
+.dshp-root *,.dshp-root *::before,.dshp-root *::after{box-sizing:border-box}
+.dshp-page{max-width:720px;gap:16px;padding-top:8px}
+.dshp-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.dshp-page-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dshp-page-lead{margin:0;font-size:14px;line-height:22px;color:var(--dsw-alias-label-tertiary,var(--dshp-mute));max-width:52ch}
+.dshp-panel-lead{margin:2px 0 0;font-size:13px;line-height:20px;color:var(--dsw-alias-label-tertiary,var(--dshp-mute));max-width:60ch}
+.dshp-segbar{display:inline-flex;align-items:center;gap:2px;padding:2px;border:.5px solid var(--dsw-alias-border-l3,var(--dshp-line));border-radius:var(--dsw-radius-md,12px);background:var(--dsw-alias-button-ghost-active-fill,var(--dshp-fill));flex:none}
+.dshp-seg{appearance:none;border:0;background:transparent;color:var(--dsw-alias-label-secondary,var(--dshp-mute));font:inherit;font-size:13px;line-height:20px;padding:4px 12px;border-radius:calc(var(--dsw-radius-md,12px) - 2px);cursor:pointer;white-space:nowrap;transition:background .15s var(--dshp-ease),color .15s var(--dshp-ease)}
+.dshp-seg:hover{color:var(--dsw-alias-label-primary,var(--dshp-ink))}
+.dshp-seg.on{background:var(--dsw-alias-bg-layer-1,var(--dsw-alias-bg-base,#fff));color:var(--dsw-alias-label-primary,var(--dshp-ink));box-shadow:0 1px 2px color-mix(in srgb,#000 12%,transparent)}
+.dshp-seg:focus-visible{outline:2px solid var(--dshp-accent);outline-offset:1px}
+.dshp-caret{display:inline-block;width:12px;flex:none;font-size:11px;line-height:1;color:var(--dsw-alias-label-tertiary,var(--dshp-mute));transition:transform .15s var(--dshp-ease)}
+.dshp-group.is-open .dshp-caret{transform:rotate(90deg)}
+.dshp-rulename{display:flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;line-height:22px}
+.dshp-skel-rows{display:flex;flex-direction:column;gap:10px;padding:14px 0 4px}
+.dshp-skel-rows .dshp-skel{height:10px;border-radius:5px}
+.dshp-skel-rows .dshp-skel:nth-child(1){width:38%}
+.dshp-skel-rows .dshp-skel:nth-child(2){width:52%}
+.dshp-skel-rows .dshp-skel:nth-child(3){width:29%}
+.dshp-gate{margin-top:12px;padding-top:12px;border-top:.5px solid var(--dsw-alias-border-l2,var(--dshp-line))}
+.dshp-gate .dshp-hint{margin:0 0 6px;color:var(--dsw-alias-label-tertiary,var(--dshp-mute));font-size:12px;line-height:18px}
+.dshp-gate label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--dsw-alias-label-primary,inherit)}
+.dshp-audit{max-height:220px;overflow:auto;margin:8px 0 0;padding:10px 12px;border-radius:var(--dsw-radius-md,12px);background:var(--dsw-alias-bg-layer-2,rgba(0,0,0,.03));font-family:var(--dsw-font-family-mono,ui-monospace,monospace);font-size:11.5px;line-height:17px;white-space:pre-wrap;word-break:break-all;color:var(--dsw-alias-label-secondary,var(--dshp-mute))}
+@media (max-width:620px){.dshp-page-head{flex-direction:column;align-items:stretch}.dshp-segbar{align-self:flex-start}}
 `;
 
 		function formatSize(bytes) {
@@ -1206,6 +1289,111 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 					) : null,
 				);
 			});
+		}
+
+		/* 审批档位 + 审计流水。
+		 * 两个诉求分开：审计永远记（谁调的、批没批、结果如何），审批只是可选门槛。
+		 * 默认 audit 表示行为与旧版一致，仅多一份流水；enforce 才要求 allowed-once。 */
+		function GateSection({ t }) {
+			const tr = typeof t === "function" ? t : ((key) => key);
+			const [mode, setMode] = useState(null);
+			const [gated, setGated] = useState([]);
+			const [busy, setBusy] = useState(false);
+			const [notice, setNotice] = useState({ kind: "idle", text: "" });
+			const [auditOpen, setAuditOpen] = useState(false);
+			const [auditText, setAuditText] = useState("");
+			const [auditBusy, setAuditBusy] = useState(false);
+
+			useEffect(() => {
+				apiJson("/dsh-purge/approval-mode")
+					.then((d) => {
+						if (d && d.ok) {
+							setMode(d.mode === "enforce" ? "enforce" : "audit");
+							setGated(Array.isArray(d.gated) ? d.gated : []);
+						}
+					})
+					.catch(() => {});
+			}, []);
+
+			const save = (next) => {
+				if (busy || !next) return;
+				const previous = mode;
+				setMode(next);
+				setBusy(true);
+				apiJson("/dsh-purge/approval-mode", {
+					method: "POST",
+					headers: { "content-type": "application/json" },
+					body: JSON.stringify({ mode: next }),
+				})
+					.then((d) => {
+						if (d && d.ok) {
+							setNotice({ kind: "ok", text: tr("gate.saved") });
+						} else {
+							setMode(previous);
+							setNotice({ kind: "error", text: tr("err.save", { error: (d && d.error) || "" }) });
+						}
+					})
+					.catch((e) => {
+						setMode(previous);
+						setNotice({ kind: "error", text: tr("err.save", { error: e.message }) });
+					})
+					.finally(() => setBusy(false));
+			};
+
+			const loadAudit = () => {
+				setAuditBusy(true);
+				apiJson("/dsh-purge/audit?limit=40")
+					.then((d) => setAuditText(d && d.ok ? String(d.text || "") : tr("err.status", { error: (d && d.error) || "" })))
+					.catch((e) => setAuditText(tr("err.status", { error: e.message })))
+					.finally(() => setAuditBusy(false));
+			};
+
+			const toggleAudit = () => {
+				const next = !auditOpen;
+				setAuditOpen(next);
+				if (next) loadAudit();
+			};
+
+			if (!mode) return null;
+			return h("div", { className: "dshp-gate" },
+				h("div", { className: "dshp-sub" },
+					h("h4", null, tr("gate.title")),
+					noticeNode(notice),
+				),
+				h("p", { className: "dshp-hint" }, tr("gate.hint")),
+				h("div", { className: "dshp-row" },
+					h("label", null,
+						h("input", {
+							type: "radio",
+							name: "dshp-approval-mode",
+							checked: mode === "audit",
+							disabled: busy,
+							onChange: () => save("audit"),
+						}),
+						tr("gate.mode.audit"),
+					),
+					h("label", null,
+						h("input", {
+							type: "radio",
+							name: "dshp-approval-mode",
+							checked: mode === "enforce",
+							disabled: busy,
+							onChange: () => save("enforce"),
+						}),
+						tr("gate.mode.enforce"),
+					),
+				),
+				gated.length
+					? h("p", { className: "dshp-hint" }, tr("gate.gated", { list: gated.join(", ") }))
+					: null,
+				h("div", { className: "dshp-row" },
+					h(Btn, { tiny: true, onClick: toggleAudit }, auditOpen ? tr("gate.audit.hide") : tr("gate.audit.show")),
+					auditOpen ? h(Btn, { tiny: true, disabled: auditBusy, onClick: loadAudit }, auditBusy ? tr("gate.audit.busy") : tr("gate.audit.refresh")) : null,
+				),
+				auditOpen
+					? h("pre", { className: "dshp-audit" }, auditBusy ? tr("gate.audit.busy") : (auditText || tr("gate.audit.empty")))
+					: null,
+			);
 		}
 
 		function HooksDenySection({ onSaved }) {
@@ -1416,6 +1604,10 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 			const [channel, setChannel] = useState("stable");
 			const [pick, setPick] = useState({ stable: "", beta: "" });
 			const actionTicket = useRef(0);
+			// doAction / saveOverride 都是 useCallback，闭包里的 state 永远是第一次渲染的值。
+			// 用 ref 追最新状态，写动作才带得上当前 rev（另一个窗口改过就 409）。
+			const stateRef = useRef(state);
+			stateRef.current = state;
 			const overrideRef = useRef("");
 			const defaultOverrideRef = useRef("");
 			const promptSeededRef = useRef(false);
@@ -1641,14 +1833,26 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 					setAskRestart(false);
 					setNotice({ kind: "idle", text: "" });
 					const applyContent = action === "apply" ? readPromptBox() : "";
+					const rev = stateRef.current && stateRef.current.rev;
 					fetch("/dsh-purge/" + action, {
 						method: "POST",
 						headers: { "content-type": "application/json" },
-						body: JSON.stringify(action === "apply" ? { content: applyContent } : {}),
+						body: JSON.stringify(action === "apply" ? { content: applyContent, rev } : { rev }),
 					})
-						.then((r) => r.json())
-						.then((d) => {
+						.then((r) => r.json().then((d) => ({ status: r.status, d })))
+						.then(({ status, d }) => {
 							if (ticket !== actionTicket.current) return;
+							if (status === 409 && d && d.stale) {
+								setNotice({
+									kind: "error",
+									text: tr("err.stale", {
+										rev: String(d.rev ?? "?"),
+										last: String((d.last && d.last.action) || "?"),
+									}),
+								});
+								loadAll();
+								return;
+							}
 							if (responseNeedsPrompt(d)) {
 								rejectNeedPrompt(tr);
 								return;
@@ -1698,12 +1902,14 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 								return;
 							}
 							if (action === "apply") {
+								if (typeof d.rev === "number") setState((cur) => (cur ? Object.assign({}, cur, { rev: d.rev }) : cur));
 								setNotice({ kind: "ok", text: tr("ok.done") });
 								loadAll();
 								suppressRestartAsk.current = false;
 								setAskRestart(true);
 								return;
 							}
+							if (typeof d.rev === "number") setState((cur) => (cur ? Object.assign({}, cur, { rev: d.rev }) : cur));
 							setNotice({ kind: "ok", text: tr("ok.done") });
 							loadAll();
 						})
@@ -1870,6 +2076,10 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 			const versions = (updateInfo && updateInfo.versions) || [];
 			const channelNow = (updateInfo && updateInfo.channel) || channel || "stable";
 			const localVer = (s && s.plugin_version) || (updateInfo && updateInfo.localVersion) || "";
+			// 进程里跑的版本与磁盘上装好的版本不一致，就说明更新完了但还没重启。
+			const loadedVer = (updateInfo && updateInfo.loadedVersion) || localVer;
+			const installedVer = (updateInfo && updateInfo.installedVersion) || "";
+			const restartRequired = Boolean(updateInfo && updateInfo.restartRequired);
 			const renderEdition = (id) => {
 				const lane = (updateInfo && updateInfo.lanes && updateInfo.lanes[id]) || {};
 				const ceiling = listedCeiling(versions, localVer || (updateInfo && updateInfo.localVersion));
@@ -1932,7 +2142,10 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 			};
 			return h("section", { className: "dshp-panel", "aria-label": t("purge.title") },
 				h("div", { className: "dshp-head" },
-					h("h3", { className: "dshp-title" }, t("purge.title")),
+					h("div", null,
+						h("h3", { className: "dshp-title" }, t("purge.title")),
+						h("p", { className: "dshp-panel-lead" }, t("purge.lead")),
+					),
 					h("span", { className: "dshp-pill" }, t("surface." + hostSurface)),
 				),
 				h("div", { className: "dshp-rel" },
@@ -1946,6 +2159,10 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 						renderEdition("beta"),
 					),
 					noticeNode(updateNotice),
+					restartRequired ? h("p", {
+						className: "dshp-hint",
+						style: { margin: "6px 0 0", color: "var(--dshp-warn, #b8860b)", fontSize: 12 },
+					}, t("update.pendingRestart", { installed: installedVer || "—", loaded: loadedVer || "—" })) : null,
 				),
 				s ? h("div", { className: "dshp-metrics" },
 					h("div", { className: "dshp-metric" },
@@ -1973,6 +2190,7 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 				),
 				h("div", { className: "dshp-bar", "aria-hidden": "true" }, h("i", { style: { width: pct + "%" } })),
 				h(PatchGroups, { state: s }),
+				h(GateSection, { t: t }),
 				h(HooksDenySection, { onSaved: loadAll }),
 				h("div", { className: "dshp-row", style: { marginTop: 14 } },
 					h(Btn, { kind: "primary", disabled: patchBusy || uninstallBusy || !overrideLoaded, onClick: () => doAction("apply", "action.apply") }, patchBusy ? t("btn.apply.busy") : t("btn.apply")),
@@ -2020,6 +2238,7 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 						h(Btn, { tiny: true, disabled: patchBusy || !overrideLoaded || !defaultOverride, onClick: restoreOverride }, t("btn.restoreInject")),
 					),
 				),
+				h("p", { className: "dshp-panel-lead", style: { margin: "0 0 8px" } }, t("override.lead")),
 				h("textarea", {
 					className: "dshp-area",
 					ref: promptAreaRef,
@@ -2861,6 +3080,205 @@ body:not([data-ds-dark-theme]) .dshp-auth-ops button.primary{background:var(--ds
 				h(RulesSection, null),
 				h(SkillsSection, null),
 			);
+		}
+
+		/* ── 设置页外壳（1.2.0 新增，来自 JeffKeeping/dsh-purge-plus）───────────────
+		 * 主入口搬到「设置 → DeepSeek Harness Purge」：
+		 *   · 页面用官方 settings.section 契约注册，描述符只有 id / order / label；
+		 *     官方设置页按 section id 画图标，未知 id 落到齿轮，所以这里不传 icon；
+		 *   · 页面内部用分段控件（破甲 / 规则 / 技能 / 演练台），不再横向摊三块；
+		 *   · 顶部只留一行说明 + 分段，避免和设置外壳的双层标题打架。
+		 * 右侧浮动 dock 仍然保留，作为对话里随手打开的快捷面板。 */
+		const PAGE_SEGMENTS = [
+			{ id: "armor", key: "page.seg.armor" },
+			{ id: "rules", key: "page.seg.rules" },
+			{ id: "skills", key: "page.seg.skills" },
+			{ id: "drill", key: "page.seg.drill" },
+		];
+
+		/* 设置导航行的图标。
+		 * settings.section 契约只投影 id / order / label，没有 icon 字段；外壳按 section id
+		 * 决定字形，未知 id 一律画齿轮（和「通用设置」撞脸）。所以只能按 label 认出自己那一行、
+		 * 打上标记，再用 CSS 把外壳的 svg 藏掉、把下面这张 mask 图盖上去。
+		 * 图形是「开了口的锁」：一是不和任何官方图标重复，二是 16px 下轮廓仍然清楚，
+		 * 三是不用颜色也能读懂（mask 只吃 alpha，本来就没法做双色）。 */
+		const NAV_ICON_MARKER = "data-dsh-purge-nav-icon";
+		const NAV_ICON_SVG =
+			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">' +
+			'<path fill="#000" d="M6.9 10.1h10.2a2 2 0 0 1 2 2v7.1a2 2 0 0 1-2 2H6.9a2 2 0 0 1-2-2v-7.1a2 2 0 0 1 2-2Zm5.1 2.7a1.5 1.5 0 0 0-.75 2.8v1.5a.75.75 0 0 0 1.5 0v-1.5A1.5 1.5 0 0 0 12 12.8Z"/>' +
+			'<path fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" d="M8.2 10.1V7.6a3.9 3.9 0 0 1 7.1-2.3"/>' +
+			"</svg>";
+		const NAV_ICON_MASK_URL = "url(\"data:image/svg+xml;utf8," + encodeURIComponent(NAV_ICON_SVG) + "\")";
+		const NAV_ROW_SELECTOR = "[role=\"dialog\"] nav button";
+
+		function installSettingsNavIcon(ctx, resolveLabel) {
+			if (typeof document === "undefined" || !ctx || typeof ctx.effect !== "function") return;
+			ctx.effect(() => {
+				const tag = document.createElement("style");
+				tag.dataset.plugin = "dsh-purge";
+				tag.dataset.pluginCss = "dsh-purge/settings-nav-icon";
+				tag.textContent = [
+					"[" + NAV_ICON_MARKER + "] > svg { display: none; }",
+					"[" + NAV_ICON_MARKER + "]::before {",
+					"  content: '';",
+					"  flex: none;",
+					"  width: 16px;",
+					"  height: 16px;",
+					"  background-color: currentColor;",
+					"  -webkit-mask-image: " + NAV_ICON_MASK_URL + ";",
+					"  mask-image: " + NAV_ICON_MASK_URL + ";",
+					"  -webkit-mask-repeat: no-repeat;",
+					"  mask-repeat: no-repeat;",
+					"  -webkit-mask-position: center;",
+					"  mask-position: center;",
+					"  -webkit-mask-size: 16px 16px;",
+					"  mask-size: 16px 16px;",
+					"}",
+				].join("\n");
+				document.head.appendChild(tag);
+				let disposed = false;
+				let scheduled = false;
+				let missStreak = 0;
+				let warned = false;
+				const sync = () => {
+					scheduled = false;
+					if (disposed) return;
+					const wanted = String(resolveLabel() || "").trim();
+					if (!wanted) return;
+					const rows = document.querySelectorAll(NAV_ROW_SELECTOR);
+					let hit = null;
+					for (const row of rows) {
+						if (String(row.textContent || "").trim() === wanted) { hit = row; break; }
+					}
+					if (!hit) {
+						/* 面板没开的时候整条 nav 都不存在，这是常态，不该报警。
+						   只有「nav 已经在、我们的行却不在」才是真的注册失败。 */
+						if (rows.length === 0) { missStreak = 0; return; }
+						missStreak += 1;
+						if (missStreak === 2 && !warned) {
+							warned = true;
+							try { console.warn("[dsh-purge] settings nav has no purge row; section registration may have failed"); } catch { /* ignore */ }
+						}
+						return;
+					}
+					missStreak = 0;
+					if (!hit.hasAttribute(NAV_ICON_MARKER)) hit.setAttribute(NAV_ICON_MARKER, "1");
+				};
+				const schedule = () => {
+					if (scheduled || disposed) return;
+					scheduled = true;
+					window.requestAnimationFrame(sync);
+				};
+				const observer = new MutationObserver(schedule);
+				observer.observe(document.body || document.documentElement, {
+					childList: true,
+					subtree: true,
+					attributes: true,
+					attributeFilter: ["class", "data-ds-dark-theme"],
+				});
+				schedule();
+				return () => {
+					disposed = true;
+					observer.disconnect();
+					tag.remove();
+					for (const row of document.querySelectorAll("[" + NAV_ICON_MARKER + "]")) {
+						row.removeAttribute(NAV_ICON_MARKER);
+					}
+				};
+			}, "dsh-purge: settings nav icon");
+		}
+
+		function SettingsPage(props) {
+			const t = typeof props.t === "function" ? props.t : translate;
+			const [seg, setSeg] = useState("armor");
+			const [theme, setTheme] = useState(readTheme);
+			useEffect(() => {
+				let cancelled = false;
+				let timer = 0;
+				const syncFromHost = () => {
+					if (!cancelled) setTheme(detectHostTheme());
+				};
+				const syncSoon = () => {
+					if (timer) window.clearTimeout(timer);
+					timer = window.setTimeout(syncFromHost, 50);
+				};
+				syncFromHost();
+				let mq;
+				try {
+					mq = window.matchMedia?.("(prefers-color-scheme: dark)");
+					mq?.addEventListener?.("change", syncFromHost);
+				} catch { /* ignore */ }
+				let obs;
+				try {
+					obs = new MutationObserver(syncSoon);
+					if (document.body) obs.observe(document.body, { attributes: true, attributeFilter: ["data-ds-dark-theme", "class", "style"] });
+					obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-ds-dark-theme", "class", "style"] });
+				} catch { /* ignore */ }
+				return () => {
+					cancelled = true;
+					if (timer) window.clearTimeout(timer);
+					try { mq?.removeEventListener?.("change", syncFromHost); } catch { /* ignore */ }
+					try { obs?.disconnect(); } catch { /* ignore */ }
+				};
+			}, []);
+			translate = t;
+			return h("div", { className: "dshp-root dshp-page", "data-theme": theme, "data-seg": seg },
+				h("style", null, PURGE_CSS),
+				h("div", { className: "dshp-page-head" },
+					h("div", { className: "dshp-page-text" },
+						h("h2", { className: "dshp-title" }, t("page.title")),
+						h("p", { className: "dshp-page-lead" }, t("page.lead")),
+					),
+					h("div", { className: "dshp-segbar", role: "tablist", "aria-label": t("page.title") },
+						PAGE_SEGMENTS.map((item) => h("button", {
+							key: item.id,
+							type: "button",
+							role: "tab",
+							"aria-selected": seg === item.id ? "true" : "false",
+							className: "dshp-seg" + (seg === item.id ? " on" : ""),
+							onClick: () => setSeg(item.id),
+						}, t(item.key))),
+					),
+				),
+				seg === "armor" ? h(PurgifySection, { embedded: true, t: t }) : null,
+				seg === "rules" ? h(RulesSection, { embedded: true, t: t }) : null,
+				seg === "skills" ? h(SkillsSection, { embedded: true, t: t }) : null,
+				seg === "drill" ? h(DrillSection, { t: t }) : null,
+			);
+		}
+
+		/* 演练台。会话里的浮窗入口保留，演练台同时挂在设置页的第四段。
+		 * 授权门没走过时先渲染门槛说明 + 打开授权窗的按钮，走完就地展开；不再自己拉一块浮层。 */
+		function DrillSection(props) {
+			const t = typeof props.t === "function" ? props.t : translate;
+			const [granted, setGranted] = useState(() => readDrillAuth());
+			useEffect(() => {
+				if (granted) return undefined;
+				const timer = window.setInterval(() => {
+					if (readDrillAuth()) setGranted(true);
+				}, 800);
+				return () => window.clearInterval(timer);
+			}, [granted]);
+			if (!granted) {
+				return h("section", { className: "dshp-panel", "aria-label": t("drill.title") },
+					h("div", { className: "dshp-head" },
+						h("div", null,
+							h("h3", { className: "dshp-title" }, t("drill.title")),
+							h("p", { className: "dshp-panel-lead" }, t("drill.lead")),
+						),
+					),
+					h("div", { className: "dshp-row" },
+						h(Btn, { kind: "primary", onClick: () => requestDrill("tab") }, t("drill.authorize")),
+					),
+				);
+			}
+			const Panel = __dshPurgeDrill && __dshPurgeDrill.Panel;
+			if (!Panel) {
+				return h("section", { className: "dshp-panel" },
+					h("p", { className: "dshp-panel-lead" }, t("drill.unavailable")),
+				);
+			}
+			return h("div", { className: "dshp-drill-host" }, h(Panel, { embedded: true }));
 		}
 
 		const REWIND_CSS = `
@@ -7792,6 +8210,8 @@ body[data-ds-dark-theme] .dshp-rewind-item span{color:var(--dsw-alias-label-tert
 				});
 		}
 
+		/* 宿主 ctx，openSettingsSection 里用它取 shortcuts 服务。 */
+		let purgeHost = null;
 		let dockBus = { open: false, tab: "clean", authOpen: false, pending: "tab", listeners: new Set() };
 		function getDock() { return dockBus; }
 		function setDock(patch) {
@@ -7836,6 +8256,52 @@ body[data-ds-dark-theme] .dshp-rewind-item span{color:var(--dsw-alias-label-tert
 
 		function openDockClean() {
 			setDock({ open: true, tab: "clean", authOpen: false, pending: "tab" });
+		}
+		/* 从浮窗跳到设置页。
+		 * 官方设置外壳只对外暴露快捷键命令 settings.open（command.resolve 读 context.modal，
+		 * 传 undefined 会被当成"未知 modal"直接 return，所以必须显式传 modal: null）。
+		 * 拿不到快捷键服务时退到 DOM：点侧栏那个 aria-haspopup="dialog" 的设置按钮。
+		 * 面板打开后落到哪一段由外壳决定，所以再按 label 点中我们那一行。 */
+		function findSettingsNavRow() {
+			if (typeof document === "undefined") return null;
+			const label = String(translate("page.nav") || "").trim();
+			if (!label) return null;
+			for (const row of document.querySelectorAll(NAV_ROW_SELECTOR)) {
+				if (String(row.textContent || "").trim() === label) return row;
+			}
+			return null;
+		}
+		function clickSettingsTrigger() {
+			if (typeof document === "undefined") return false;
+			const trigger = document.querySelector('button[aria-haspopup="dialog"][aria-expanded="false"]')
+				|| document.querySelector('button[aria-haspopup="dialog"]');
+			if (!trigger) return false;
+			try { trigger.click(); return true; } catch { return false; }
+		}
+		function openSettingsSection(attempt = 0) {
+			const existing = findSettingsNavRow();
+			if (existing) {
+				try { existing.click(); } catch { /* ignore */ }
+				setDock({ open: false, authOpen: false, pending: "tab" });
+				return true;
+			}
+			if (attempt === 0) {
+				let opened = false;
+				try {
+					const shortcuts = (purgeHost && (purgeHost.shortcuts || (typeof purgeHost.get === "function" ? purgeHost.get("shortcuts") : null))) || null;
+					if (shortcuts && typeof shortcuts.invoke === "function") {
+						shortcuts.invoke("settings.open", { modal: null });
+						opened = true;
+					}
+				} catch { /* ignore */ }
+				if (!opened) opened = clickSettingsTrigger();
+				if (!opened) return false;
+			}
+			// 面板是异步挂载的：最多等 ~600ms，找到就点。
+			if (attempt < 12) {
+				window.setTimeout(() => openSettingsSection(attempt + 1), 50);
+			}
+			return true;
 		}
 		function toggleDock() {
 			if (dockBus.open) setDock({ open: false, authOpen: false, pending: "tab" });
@@ -8521,6 +8987,7 @@ body[data-ds-dark-theme] .dshp-rewind-item span{color:var(--dsw-alias-label-tert
 					st.tab === "drill" && readDrillAuth()
 						? h("button", { type: "button", onClick: () => requestDrill("full") }, t("dock.full"))
 						: null,
+					h("button", { type: "button", onClick: () => openSettingsSection() }, t("dock.openSettings")),
 					h("button", { type: "button", onClick: () => setDock({ open: false, authOpen: false, tab: "clean", pending: "tab" }) }, t("dock.close")),
 				),
 				h("div", { className: "dshp-dock-tabs", role: "tablist" },
@@ -8757,6 +9224,24 @@ body[data-ds-dark-theme] .dshp-rewind-item span{color:var(--dsw-alias-label-tert
 			ctx.effect(() => ctx.locale.register(NS, { zh, en }), "dsh-purge: dictionaries");
 			const t = ctx.locale.bind(NS);
 			translate = t;
+			purgeHost = ctx;
+			/* 设置页用官方 settings.section 槽位注册；label 是 thunk，语言切换后会重新投影。
+			   槽位不存在（旧宿主）时静默跳过，浮窗入口仍然可用。 */
+			try {
+				if (ctx.slots && typeof ctx.slots.inject === "function") {
+					ctx.slots.inject("settings.section", () => ctx.slots.register({
+						name: "settings.section",
+						id: "dsh-purge",
+						order: 450,
+						label: () => t("page.nav"),
+						locale: NS,
+						inject: () => ({ t }),
+					}, SettingsPage));
+					installSettingsNavIcon(ctx, () => t("page.nav"));
+				}
+			} catch (e) {
+				try { console.warn("[dsh-purge] settings section skipped:", e); } catch { /* ignore */ }
+			}
 			ctx.slots.inject("shell.overlay", () => ctx.slots.register({
 				name: "shell.overlay",
 				id: "dsh-purge-dock",
