@@ -1,8 +1,8 @@
-# 1.2.0
+# 1.1.75
 
 ## 中文
 
-- 版本 **1.2.0**。把社区分支（kingcharleslzy-ai/dsh-purge 1.6.43、JeffKeeping/dsh-purge-plus 1.4.2、wenjianxiong/dsh-purge-wjx 1.1.77）里可用的更新合进本仓库，不改变已有行为。补丁表 86 → **87** 条，`dshTarget` 仍是 0.2.1-rc.2。
+- 版本 **1.1.75**。把社区分支（kingcharleslzy-ai/dsh-purge 1.6.43、JeffKeeping/dsh-purge-plus 1.4.2、wenjianxiong/dsh-purge-wjx 1.1.77）里可用的更新合进本仓库，不改变已有行为。补丁表 86 → **87** 条，`dshTarget` 仍是 0.2.1-rc.2。
 - **设置页**：宿主的设置面板里现在有 **Purge** 条目（`settings.section`，id `dsh-purge`，order 450），分 **破甲 / 规则 / 技能 / 演练台** 四段，复用原来的三个段组件。宿主这个槽位没有 icon 字段，所以用 mask-image 自绘一个开口锁图标补上。浮窗里的「设置页」按钮走 `shortcuts.invoke("settings.open", { modal: null })` 打开，拿不到快捷键服务时退回点宿主的齿轮按钮，都失败才退回原浮窗。
 - **审批与审计**：新增 `lib/revision.js` 与 `lib/tool-gate.js`。`purge_apply` / `purge_revert` / `purge_uninstall` 三个工具走审批门，默认档 `audit` 只记流水、全部放行（行为与旧版一致）；设置页可切 `enforce`，模型发起的调用要一次 `allowed-once` 批准。流水写 `$DSH_HOME/dsh-purge/audit.jsonl`（1 MB 轮转、保留 2 份）。新增工具 `purge_audit`、路由 `/dsh-purge/approval-mode` 与 `/dsh-purge/audit`。
 - **并发保护**：状态带 `rev`，apply / revert 请求带旧 `rev` 时返回 409 `{ stale: true, rev, last }`，面板提示「另一个窗口刚改过状态」并重读，不再让两个窗口互相覆盖。
@@ -21,7 +21,7 @@
 
 ## English
 
-- **1.2.0**. Merges the usable parts of the community branches (kingcharleslzy-ai/dsh-purge 1.6.43, JeffKeeping/dsh-purge-plus 1.4.2, wenjianxiong/dsh-purge-wjx 1.1.77) into this repository without changing existing behavior. The patch table goes 86 → **87**; `dshTarget` stays at 0.2.1-rc.2.
+- **1.1.75**. Merges the usable parts of the community branches (kingcharleslzy-ai/dsh-purge 1.6.43, JeffKeeping/dsh-purge-plus 1.4.2, wenjianxiong/dsh-purge-wjx 1.1.77) into this repository without changing existing behavior. The patch table goes 86 → **87**; `dshTarget` stays at 0.2.1-rc.2.
 - **Settings page**: the host Settings panel now has a **Purge** entry (`settings.section`, id `dsh-purge`, order 450) with **Armor / Rules / Skills / Drill** segments reusing the three existing section components. That slot has no icon field, so a mask-image padlock is drawn in. The dock's "Settings page" button opens it through `shortcuts.invoke("settings.open", { modal: null })`, falls back to clicking the host's gear, and only then falls back to the old dock.
 - **Approval and audit**: new `lib/revision.js` and `lib/tool-gate.js`. `purge_apply` / `purge_revert` / `purge_uninstall` go through a gate; the default `audit` tier only records and always allows (same as before). The Settings page can switch to `enforce`, which requires one `allowed-once` approval for model-issued calls. The trail is `$DSH_HOME/dsh-purge/audit.jsonl` (1 MB rotation, 2 kept). New `purge_audit` tool and `/dsh-purge/approval-mode` / `/dsh-purge/audit` routes.
 - **Concurrency**: state carries `rev`; an apply or revert with a stale `rev` gets 409 `{ stale: true, rev, last }`, the panel says another window changed the state, and reloads instead of letting two windows overwrite each other.
