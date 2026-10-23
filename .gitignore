@@ -35,3 +35,6 @@ default-prompt-inject.md
 /official-harness-payload.7z
 *.asar
 *.asar.bak
+
+# 真机验收截图
+/.accept/
