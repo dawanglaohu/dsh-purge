@@ -16,6 +16,10 @@ scripts/test-*.mjs
 dsh-redteam-mode-main/
 /1
 
+# 版本适配时拉下来的宿主等价树与验证脚本（几十 MB，本机复现用）
+.tmp-rc6/
+.tmp-an*.mjs
+
 # 外部参考，不是本插件
 choirboy-prompt/
 /choirboy-prompt/

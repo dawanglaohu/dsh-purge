@@ -4,7 +4,7 @@
 
 <h1 align="center">⚔️ DeepSeek Harness 网络安全红队工具（dsh-purge）</h1>
 
-<p align="center"><strong>Version 1.1.77</strong></p>
+<p align="center"><strong>Version 1.1.78</strong></p>
 
 <p align="center">
   <em>DeepSeek Harness 破甲：让所有模型都能破甲，不同模型可换不同提示词；默认提示词面向国模「小码酱」。Jailbreak for every model — swap prompts per model. 求 Star 收藏 ⭐ 如要二开，请查看署名要求部分</em>
@@ -35,7 +35,7 @@
 >
 > 这个项目一直是业余在做。若它对你有帮助，欢迎看看下面的 [赞助](#sponsor)；也在征集 README [广告位](#ad)，换一点把项目撑下去的空间。
 
-> **官方 Web 和官方桌面端都支持。** 官方 `dsh web` 用 profile `web`；官方桌面 EXE（DeepSeek Harness **0.2.1-rc.5**，rc.3 / rc.2 同样可用）用 profile `desktop`。两边分开安装、分开点「应用」。当前版本只适配 dsh 0.2；更早的 dsh 用对应的老版本插件。社区桌面端不维护。
+> **官方 Web 和官方桌面端都支持。** 官方 `dsh web` 用 profile `web`；官方桌面 EXE（DeepSeek Harness **0.2.2-rc.1**，0.2.1-rc.5 / rc.3 / rc.2 同样可用）用 profile `desktop`。两边分开安装、分开点「应用」。当前版本只适配 dsh 0.2；更早的 dsh 用对应的老版本插件。社区桌面端不维护。
 >
 > 写进 profile 还不会改宿主。点会话标题旁的 **dsh-purge** → **清洗** → **应用**。成功会自动重启；补丁没打完不重启。重启后新开一轮对话，注入才进当前会话。
 >
@@ -186,9 +186,9 @@ Harness 不只是把问题交给模型。它还会在运行时改提示词、审
 
 最新版只支持 **dsh 0.2**，不要拿它去打 0.1.x。0.2.1 移除了 `{{cwd}}` 提示词变量与 `toolFilter` 配置项，1.1.73 起已适配；1.1.74 修掉 Windows 上点「应用」必弹崩溃框、`app.asar` 却换不掉的问题；1.1.75 把社区分支的更新合并进来（设置页、审批与审计、更新通道代理、注入位置、补丁 #93）；1.1.76 适配官方桌面 **0.2.1-rc.3**（87 条补丁锚点与 rc.2 逐字节相同，rc.3 只在 `dsh-web-app` 层新增了 `entry-customization` 一行，与本插件无冲突），并补上 pnpm 安装时自动写 `dsh.profile.bundles` 的 postinstall。0.2.0 及更早仍可用 1.1.72。
 
-1.1.77 将适配声明更新至官方桌面 **0.2.1-rc.5**。`dshTarget` 仅声明目标版本，宿主不读它；87 条补丁锚点在官方 clean rc.3 / rc.5 宿主树上逐条比对状态完全一致，对 rc.5 全量树真实 apply 后三次重复 apply 幂等、逐文件语法检查通过（唯一 `missing_file` 是提取树里没有壳 `main.js` 的 `desktop-shell` 补丁，真机桌面宿主上该文件存在，非锚点回归）。
+1.1.78 将适配声明更新至官方桌面 **0.2.2-rc.1**。`dshTarget` 仅声明目标版本，宿主不读它。0.2.2 把 PTC 实现拆到新包 `dsh-tool-executor-ptc`、把 `serviceAsk` 拆到 `dsh-tools/lib/pipeline.js`、把交付物提示词拆到 `dsh-deliverable-file-references`，并让 `systemPrompt.assemble()` 的 `tools` 改由 provider 自己追加、`agent-loop` 的 assemble 调用点改传合并对象——因此本次给 8 条新增锚点（#12/#14/#17/#40/#62/#67/#74/#87）、另有 2 条只换宿主文件就恢复（#54/#60），并补 4 组宿主路径，其余 77 条锚点原样可用。87 条补丁在 rc.5 与 rc.1 两棵 40 包等价树上逐条状态完全一致，真实 apply 三次幂等、apply 后等价树的 173 个 `.js` 全部通过 `node --check`。
 
-- **dsh 0.2**（官方桌面 **0.2.1-rc.5** / **0.2.1-rc.3** / **0.2.1-rc.2** / 官方 `dsh web`）：用 **1.1.77** 及以上。本页命令装的就是这一档。
+- **dsh 0.2**（官方桌面 **0.2.2-rc.1** / **0.2.1-rc.5** / **0.2.1-rc.3** / **0.2.1-rc.2** / 官方 `dsh web`）：用 **1.1.78** 及以上。本页命令装的就是这一档。
 - **dsh 0.1.7**（含 rc.1 / rc.2）：用 **1.1.39** 及更早 —— 在 [Releases](https://github.com/YuJunZhiXue/dsh-purge/releases) 里选对应标签。
 
 对不上的补丁会显示待应用或跳过，不会乱改文件。
@@ -218,7 +218,7 @@ dsh plugin --profile desktop add dsh-purge
 桌面客户端也可以点按钮（`dsh://` 唤起）：
 
 <p align="center">
-  <a href="dsh://plugin/install?id=dsh-purge&name=dsh-purge&version=1.1.77&repo=dawanglaohu%2Fdsh-purge&permissions=%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%2C%E6%9C%AC%E6%9C%BA%E8%A1%A5%E4%B8%81%2C%E8%AE%BE%E7%BD%AE%E9%A1%B5&downloadUrl=https%3A%2F%2Fgithub.com%2Fdawanglaohu%2Fdsh-purge%2Farchive%2Frefs%2Fheads%2Fmaster.tar.gz"><strong>唤起客户端一键安装</strong></a>
+  <a href="dsh://plugin/install?id=dsh-purge&name=dsh-purge&version=1.1.78&repo=dawanglaohu%2Fdsh-purge&permissions=%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%2C%E6%9C%AC%E6%9C%BA%E8%A1%A5%E4%B8%81%2C%E8%AE%BE%E7%BD%AE%E9%A1%B5&downloadUrl=https%3A%2F%2Fgithub.com%2Fdawanglaohu%2Fdsh-purge%2Farchive%2Frefs%2Fheads%2Fmaster.tar.gz"><strong>唤起客户端一键安装</strong></a>
 </p>
 
 ### 装完都要做这三步
